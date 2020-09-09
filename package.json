@@ -1,0 +1,86 @@
+{
+  "name": "@stefanprobst/next-error-boundary",
+  "version": "1.0.0",
+  "source": "src/index.tsx",
+  "main": "dist/index.js",
+  "module": "dist/index.modern.js",
+  "types": "dist/index.d.ts",
+  "repository": "git@github.com:stefanprobst/next-error-boundary.git",
+  "author": "Stefan Probst <stefanprobst@kolabnow.com>",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn build:cjs && yarn build:esm",
+    "build:cjs": "microbundle -f cjs --jsx React.createElement --no-compress src/index.cjs.tsx",
+    "build:esm": "microbundle -f modern --jsx React.createElement --no-compress",
+    "check:types": "tsc",
+    "clean": "rimraf dist",
+    "dev": "yarn build:esm watch",
+    "format": "prettier . -l --ignore-path .gitignore",
+    "format:fix": "yarn format --write",
+    "lint": "eslint . --ignore-path .gitignore",
+    "lint:fix": "yarn lint --fix",
+    "prepublishOnly": "yarn && yarn clean && yarn build"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "@stefanprobst/commitlint-config": "^1.0.0",
+    "@stefanprobst/eslint-config-next-component": "^1.0.1",
+    "@stefanprobst/prettier-config": "^1.0.0",
+    "@types/react": "^16.9.48",
+    "@types/react-dom": "^16.9.8",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
+    "eslint": "^7.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-import-resolver-typescript": "^2.3.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^24.0.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react-hooks": "^4.1.0",
+    "husky": "^4.2.5",
+    "jest": "^26.4.2",
+    "lint-staged": "^10.2.11",
+    "microbundle": "^0.12.3",
+    "next": "^9.5.2",
+    "prettier": "^2.0.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.0.2"
+  },
+  "peerDependencies": {
+    "next": "^9.5.0",
+    "react": "^16.10.0"
+  },
+  "engines": {
+    "node": ">=12.9",
+    "yarn": "^1"
+  },
+  "commitlint": {
+    "extends": [
+      "@stefanprobst/commitlint-config"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "@stefanprobst/eslint-config-next-component"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "tsc && lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.(js|jsx|ts|tsx)": "eslint --cache --fix",
+    "*.(json,md,mdx)": "prettier --write"
+  },
+  "prettier": "@stefanprobst/prettier-config"
+}
