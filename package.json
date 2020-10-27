@@ -1,6 +1,6 @@
 {
   "name": "@stefanprobst/next-error-boundary",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "source": "src/index.tsx",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",

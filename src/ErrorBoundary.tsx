@@ -11,6 +11,8 @@ type ErrorBoundaryProps = {
 
 type ErrorBoundaryState = {
   error: Error | null
+  onReset: () => void
+  setError: (error: Error | null) => void
 }
 
 type ErrorBoundaryContext = {
@@ -40,13 +42,13 @@ export default class ErrorBoundary extends Component<
   constructor(props: ErrorBoundaryProps) {
     super(props)
 
-    this.state = { error: null }
-
     this.onReset = this.onReset.bind(this)
     this.setError = this.setError.bind(this)
+
+    this.state = { error: null, onReset: this.onReset, setError: this.setError }
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     return { error }
   }
 
@@ -70,16 +72,14 @@ export default class ErrorBoundary extends Component<
   }
 
   render(): JSX.Element {
-    const { error } = this.state
-
-    if (error !== null) {
+    if (this.state.error !== null) {
       const { fallback: Fallback } = this.props
-      const { onReset, setError } = this
 
       if (Fallback !== undefined) {
-        const errorBoundaryContext = { error, onReset, setError }
         return (
-          <ErrorBoundaryContext.Provider value={errorBoundaryContext}>
+          <ErrorBoundaryContext.Provider
+            value={this.state as ErrorBoundaryState & { error: Error }}
+          >
             {typeof Fallback === 'function' ? <Fallback /> : Fallback}
           </ErrorBoundaryContext.Provider>
         )
