@@ -14,7 +14,7 @@ type ErrorBoundaryState = {
 }
 
 type ErrorBoundaryContext = {
-  error: Error | null
+  error: Error
   onReset: () => void
   setError: (error: Error | null) => void
 }
