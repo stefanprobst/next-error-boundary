@@ -6,24 +6,31 @@ import type { ErrorInfo, FC } from 'react'
 type ErrorBoundaryProps = {
   fallback?: FC | JSX.Element
   onError?: (error: Error, errorInfo: ErrorInfo) => void
+  onReset?: () => void
 }
 
 type ErrorBoundaryState = {
   error: Error | null
 }
 
-const ErrorBoundaryContext = createContext<Error | null>(null)
+type ErrorBoundaryContext = {
+  error: Error | null
+  onReset: () => void
+  setError: (error: Error | null) => void
+}
 
-export function useError(): Error {
-  const error = useContext(ErrorBoundaryContext)
+const ErrorBoundaryContext = createContext<ErrorBoundaryContext | null>(null)
 
-  if (error === null) {
+export function useError(): ErrorBoundaryContext {
+  const errorBoundaryContext = useContext(ErrorBoundaryContext)
+
+  if (errorBoundaryContext === null) {
     throw new Error(
       'useError must be nested inside an ErrorBoundaryContext.Provider',
     )
   }
 
-  return error
+  return errorBoundaryContext
 }
 
 export default class ErrorBoundary extends Component<
@@ -32,7 +39,11 @@ export default class ErrorBoundary extends Component<
 > {
   constructor(props: ErrorBoundaryProps) {
     super(props)
+
     this.state = { error: null }
+
+    this.onReset = this.onReset.bind(this)
+    this.setError = this.setError.bind(this)
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
@@ -47,15 +58,28 @@ export default class ErrorBoundary extends Component<
     }
   }
 
+  setError(error: Error | null): void {
+    this.setState({ error })
+  }
+
+  onReset(): void {
+    if (typeof this.props.onReset === 'function') {
+      this.props.onReset()
+    }
+    this.setError(null)
+  }
+
   render(): JSX.Element {
     const { error } = this.state
 
     if (error !== null) {
       const { fallback: Fallback } = this.props
+      const { onReset, setError } = this
 
       if (Fallback !== undefined) {
+        const errorBoundaryContext = { error, onReset, setError }
         return (
-          <ErrorBoundaryContext.Provider value={error}>
+          <ErrorBoundaryContext.Provider value={errorBoundaryContext}>
             {typeof Fallback === 'function' ? <Fallback /> : Fallback}
           </ErrorBoundaryContext.Provider>
         )

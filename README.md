@@ -10,13 +10,22 @@ the `useError` hook.
 import ErrorBoundary, { useError } from '@stefanprobst/next-error-boundary'
 
 function CustomErrorPage() {
-  const error = useError()
-  return <p>An unexpected error has occurred: {error.message}.</p>
+  const { error, onReset } = useError()
+  return (
+    <section role="alert">
+      <p>An unexpected error has occurred: {error.message}.</p>
+      <button onClick={onReset}>Reset</button>
+    </section>
+  )
 }
 
 function Page() {
   return (
-    <ErrorBoundary fallback={<CustomErrorPage />}>
+    <ErrorBoundary
+      fallback={<CustomErrorPage />}
+      onError={(error, errorInfo) => console.error(error, errorInfo)}
+      onReset={() => resetStuffThatThrewError()}
+    >
       <main>
         <h1>Hello World</h1>
       </main>

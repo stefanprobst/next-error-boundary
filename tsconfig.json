@@ -8,7 +8,8 @@
     "target": "esnext",
     "noEmit": true,
     "incremental": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]
