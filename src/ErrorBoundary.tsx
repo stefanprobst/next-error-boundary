@@ -1,39 +1,42 @@
 import NextErrorPage from 'next/error'
 import * as React from 'react'
-import { Component, createContext, Fragment, useContext } from 'react'
+import { Component, Fragment, createContext, useContext } from 'react'
 import type { ErrorInfo, FC } from 'react'
 
-type ErrorBoundaryProps = {
-  fallback?: FC | JSX.Element
-  onError?: (error: Error, errorInfo: ErrorInfo) => void
-  onReset?: () => void
-}
-
-type ErrorBoundaryState = {
+export interface ErrorBoundaryState {
   error: Error | null
-  onReset: () => void
-  setError: (error: Error | null) => void
 }
 
-type ErrorBoundaryContext = {
+export interface ErrorBoundaryContext {
   error: Error
   onReset: () => void
-  setError: (error: Error | null) => void
 }
 
-const ErrorBoundaryContext = createContext<ErrorBoundaryContext | null>(null)
+export const ErrorBoundaryContext = createContext<ErrorBoundaryContext | null>(
+  null,
+)
 
-export function useError(): ErrorBoundaryContext {
+export function useError(): ErrorBoundaryState {
   const errorBoundaryContext = useContext(ErrorBoundaryContext)
 
   if (errorBoundaryContext === null) {
     throw new Error(
-      'useError must be nested inside an ErrorBoundaryContext.Provider',
+      '`useError` must be nested inside an `ErrorBoundaryProvider`.',
     )
   }
 
   return errorBoundaryContext
 }
+
+export interface ErrorBoundaryProps {
+  children: JSX.Element
+  fallback?: FC | JSX.Element
+  onError?: (error: Error, info: ErrorInfo) => void
+  onReset?: () => void
+  resetOnChange?: Array<unknown>
+}
+
+const initialState = { error: null }
 
 export default class ErrorBoundary extends Component<
   ErrorBoundaryProps,
@@ -43,42 +46,49 @@ export default class ErrorBoundary extends Component<
     super(props)
 
     this.onReset = this.onReset.bind(this)
-    this.setError = this.setError.bind(this)
 
-    this.state = { error: null, onReset: this.onReset, setError: this.setError }
+    this.state = initialState
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     return { error }
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    const { onError } = this.props
-
-    if (typeof onError === 'function') {
-      onError(error, errorInfo)
-    }
+  componentDidCatch(error: Error, info: ErrorInfo): void {
+    this.props.onError?.(error, info)
   }
 
-  setError(error: Error | null): void {
-    this.setState({ error })
+  componentDidUpdate(prevProps: ErrorBoundaryProps): void {
+    function hasChanged(a: Array<unknown> = [], b: Array<unknown> = []) {
+      return (
+        a.length !== b.length ||
+        a.some((item, index) => !Object.is(item, b[index]))
+      )
+    }
+
+    if (
+      this.state.error !== null &&
+      hasChanged(prevProps.resetOnChange, this.props.resetOnChange)
+    ) {
+      this.onReset()
+    }
   }
 
   onReset(): void {
-    if (typeof this.props.onReset === 'function') {
-      this.props.onReset()
-    }
-    this.setError(null)
+    this.props.onReset?.()
+    this.setState(initialState)
   }
 
   render(): JSX.Element {
-    if (this.state.error !== null) {
+    const { error } = this.state
+
+    if (error !== null) {
       const { fallback: Fallback } = this.props
 
       if (Fallback !== undefined) {
         return (
           <ErrorBoundaryContext.Provider
-            value={this.state as ErrorBoundaryState & { error: Error }}
+            value={{ error, onReset: this.onReset }}
           >
             {typeof Fallback === 'function' ? <Fallback /> : Fallback}
           </ErrorBoundaryContext.Provider>
