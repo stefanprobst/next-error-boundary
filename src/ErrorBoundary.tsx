@@ -1,7 +1,7 @@
 import NextErrorPage from 'next/error'
-import * as React from 'react'
-import { Component, Fragment, createContext, useContext } from 'react'
 import type { ErrorInfo, FC } from 'react'
+import * as React from 'react'
+import { Component, createContext, Fragment, useContext } from 'react'
 
 export interface ErrorBoundaryState {
   error: Error | null
@@ -16,7 +16,7 @@ export const ErrorBoundaryContext = createContext<ErrorBoundaryContext | null>(
   null,
 )
 
-export function useError(): ErrorBoundaryState {
+export function useError(): ErrorBoundaryContext {
   const errorBoundaryContext = useContext(ErrorBoundaryContext)
 
   if (errorBoundaryContext === null) {

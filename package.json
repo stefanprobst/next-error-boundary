@@ -1,6 +1,6 @@
 {
   "name": "@stefanprobst/next-error-boundary",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "source": "src/index.tsx",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -43,6 +43,7 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "husky": "^4.3.7",
     "jest": "^26.6.3",
     "lint-staged": "^10.5.3",
