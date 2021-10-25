@@ -1,18 +1,9 @@
 {
-  "debug.node.autoAttach": "off",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "eslint.enable": true,
-  "eslint.format.enable": true,
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "[typescript,typescriptreact,javascript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "editor.formatOnSave": false
-  },
-  "[markdown]": {
-    "files.trimTrailingWhitespace": false
-  }
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
