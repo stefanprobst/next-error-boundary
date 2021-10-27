@@ -1,9 +1,7 @@
 # next-error-boundary
 
-ErrorBoundary component for Next.js apps, based on
-[`react-error-boundary`](https://github.com/bvaughn/react-error-boundary). Renders the error page
-from `next/error` by default. The fallback component can access the thrown error with the `useError`
-hook.
+Minimal React `ErrorBoundary` component. The fallback component can access the thrown error with the
+`useError` hook, and reset the error state by calling `onReset`.
 
 ## Example
 
@@ -28,8 +26,10 @@ export default function Page() {
       fallback={<CustomErrorPage />}
       onError={(error, errorInfo) => console.error(error, errorInfo)}
       onReset={() => resetStuffThatThrewError()}
-      resetOnChange={[router.asPath]}
-      // resetOnRouteChange={false}
+      /**
+       * Reset the error component when the route changes.
+       */
+      key={router.asPath}
     >
       <main>
         <h1>Hello World</h1>
