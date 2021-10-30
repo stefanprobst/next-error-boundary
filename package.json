@@ -1,11 +1,12 @@
 {
   "name": "@stefanprobst/next-error-boundary",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "type": "module",
   "main": "./dist/cjs/ErrorBoundary.js",
   "exports": {
     "import": "./dist/ErrorBoundary.js",
-    "require": "./dist/cjs/ErrorBoundary.js"
+    "require": "./dist/cjs/ErrorBoundary.js",
+    "types": "./dist/ErrorBoundary.d.ts"
   },
   "types": "./dist/ErrorBoundary.d.ts",
   "repository": "git@github.com:stefanprobst/next-error-boundary.git",
