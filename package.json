@@ -1,6 +1,6 @@
 {
   "name": "@stefanprobst/next-error-boundary",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "type": "module",
   "main": "./dist/cjs/ErrorBoundary.js",
   "exports": {
@@ -32,7 +32,7 @@
     "validate": "yarn run format && yarn run lint && yarn run type-check && yarn test"
   },
   "engines": {
-    "node": "14.x",
+    "node": ">=14.17",
     "yarn": "1.x"
   },
   "sideEffects": false,
