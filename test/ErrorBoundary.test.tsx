@@ -1,11 +1,13 @@
 import '@testing-library/jest-dom/extend-expect'
 
 import { afterAll, afterEach, beforeAll, describe, it } from '@jest/globals'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { useState } from 'react'
 
 import type { ErrorFallbackProps } from '../src/ErrorBoundary'
 import { ErrorBoundary, useError } from '../src/ErrorBoundary'
+
+/* eslint-disable arrow-body-style */
 
 /**
  * Cannot (yet) use extended `expect` when importing from `@jest/globals`.
@@ -131,11 +133,11 @@ describe('Error boundary', () => {
     expect(screen.getByRole('heading')).toHaveTextContent('Test')
 
     fireEvent.click(screen.getByRole('button', { name: /crash/i }))
-    await waitFor(() => screen.getByRole('alert'))
+    await screen.findByRole('alert')
     expect(screen.getByRole('alert')).toHaveTextContent(errorMessage)
 
     fireEvent.click(screen.getByRole('button', { name: /reset/i }))
-    await waitFor(() => screen.getByRole('heading'))
+    await screen.findByRole('heading')
     expect(screen.getByRole('heading')).toHaveTextContent('Test')
 
     expect(console.error).toHaveBeenCalledTimes(2)
@@ -168,11 +170,11 @@ describe('Error boundary', () => {
 
     render(<App />)
 
-    await waitFor(() => screen.getByRole('alert'))
+    await screen.findByRole('alert')
     expect(screen.getByRole('alert')).toHaveTextContent(errorMessage)
 
     fireEvent.click(screen.getByRole('button', { name: /reset/i }))
-    await waitFor(() => screen.getByRole('heading'))
+    await screen.findByRole('heading')
     expect(screen.getByRole('heading')).toHaveTextContent('Test')
 
     expect(console.error).toHaveBeenCalledTimes(2)
